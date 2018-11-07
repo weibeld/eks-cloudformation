@@ -1,4 +1,3 @@
-# Deploy: deploy --template-file role.yml --stack-name eks-service-role --capabilities CAPABILITY_IAM
 AWSTemplateFormatVersion: '2010-09-09'
 Description: "Role that EKS assumes for creating resources in your account"
 
