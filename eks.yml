@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: EKS cluster with a VPC with two public subnets for the worker nodes
+Description: EKS cluster using a VPC with two public subnets
 
 Parameters:
 
@@ -204,7 +204,7 @@ Resources:
       Description: Allow all incoming traffic from other worker nodes
       GroupId: !Ref WorkerNodesSecurityGroup
       SourceSecurityGroupId: !Ref WorkerNodesSecurityGroup
-      IpProtocol: -1
+      IpProtocol: '-1'
 
   WorkerNodesIngressFromControlPlaneKubelet:
     Type: AWS::EC2::SecurityGroupIngress
@@ -262,7 +262,7 @@ Resources:
       LaunchConfigurationName: !Ref WorkerNodesLaunchConfiguration
       MinSize: !Ref WorkerNodesMin
       MaxSize: !Ref WorkerNodesMax
-      VPCZoneIdentifer:
+      VPCZoneIdentifier:
         - !Ref Subnet1
         - !Ref Subnet2
 
