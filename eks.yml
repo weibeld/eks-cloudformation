@@ -3,24 +3,19 @@ Description: EKS cluster using a VPC with two public subnets
 
 Parameters:
 
-  WorkerNodesMin:
-    Type: Number
-    Description: Minimum number of worker nodes in the cluster
-    Default: 1
+  KeyPairName:
+    Type: String
+    Description: Name of an existing EC2 key pair (for SSH-access to the worker node instances)
 
-  WorkerNodesMax:
+  NumWorkerNodes:
     Type: Number
-    Description: Maximum number of worker nodes in the cluster
+    Description: Number of worker nodes
     Default: 3
 
   WorkerNodesInstanceType:
     Type: String
     Description: EC2 instance type for the worker nodes
     Default: t2.small
-
-  KeyPairName:
-    Type: String
-    Description: Name of an EC2 key pair that you can use for SSH access to the instances
 
 Mappings:
 
@@ -257,8 +252,8 @@ Resources:
         MaxBatchSize: 1
     Properties:
       LaunchConfigurationName: !Ref WorkerNodesLaunchConfiguration
-      MinSize: !Ref WorkerNodesMin
-      MaxSize: !Ref WorkerNodesMax
+      MinSize: !Ref NumWorkerNodes
+      MaxSize: !Ref NumWorkerNodes
       VPCZoneIdentifier:
         - !Ref Subnet1
         - !Ref Subnet2
