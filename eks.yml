@@ -9,7 +9,7 @@ Parameters:
 
   NumWorkerNodes:
     Type: Number
-    Description: Number of worker nodes
+    Description: Number of worker nodes to create
     Default: 3
 
   WorkerNodesInstanceType:
@@ -25,7 +25,7 @@ Mappings:
       Subnet1: 10.0.0.0/18   # 00001010.00000000.00xxxxxx.xxxxxxxx
       Subnet2: 10.0.64.0/18  # 00001010.00000000.01xxxxxx.xxxxxxxx
 
-  # IDs of the EKS optimised AMIs for the worker nodes:
+  # IDs of the "EKS-optimised AMIs" for the worker nodes:
   # https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html
   EksAmiIds:
     us-east-1:
