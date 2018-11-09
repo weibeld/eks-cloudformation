@@ -73,6 +73,9 @@ Resources:
       CidrBlock: !FindInMap [ VpcIpRanges, Option1, VPC ]
       EnableDnsSupport: true
       EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Ref AWS::StackName
 
   Subnet1:
     Type: AWS::EC2::Subnet
@@ -82,6 +85,9 @@ Resources:
       AvailabilityZone: !Select
         - 0
         - !GetAZs ""
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-Subnet1"
 
   Subnet2:
     Type: AWS::EC2::Subnet
@@ -91,9 +97,16 @@ Resources:
       AvailabilityZone: !Select
         - 1
         - !GetAZs ""
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-Subnet2"
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref AWS::StackName
 
   VPCGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -105,6 +118,9 @@ Resources:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PublicSubnets"
 
   InternetGatewayRoute:
     Type: AWS::EC2::Route
@@ -135,6 +151,7 @@ Resources:
   ControlPlane:
     Type: AWS::EKS::Cluster
     Properties:
+      Name: !Ref AWS::StackName
       Version: "1.10"
       RoleArn: !GetAtt EksServiceRole.Arn
       ResourcesVpcConfig:
@@ -153,6 +170,10 @@ Resources:
     Properties:
       GroupDescription: Security group for the elastic network interfaces between the control plane and the worker nodes
       VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-ControlPlaneSecurityGroup"
+      
 
   ControlPlaneIngressFromWorkerNodesHttps:
     Type: AWS::EC2::SecurityGroupIngress
@@ -194,9 +215,11 @@ Resources:
     Properties:
       GroupDescription: Security group for all the worker nodes
       VpcId: !Ref VPC
-      # Tags:
-      # - Key: !Sub "kubernetes.io/cluster/${ControlPlane}"
-      #   Value: 'owned'
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-WorkerNodesSecurityGroup"
+        - Key: !Sub "kubernetes.io/cluster/${ControlPlane}"
+          Value: "owned"
 
   WorkerNodesIngressFromWorkerNodes:
     Type: AWS::EC2::SecurityGroupIngress
@@ -265,6 +288,13 @@ Resources:
       VPCZoneIdentifier:
         - !Ref Subnet1
         - !Ref Subnet2
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-WorkerNodesAutoScalingGroup"
+          PropagateAtLaunch: true
+        - Key: !Sub 'kubernetes.io/cluster/${ControlPlane}'
+          Value: "owned"
+          PropagateAtLaunch: true
 
   WorkerNodesLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -281,12 +311,6 @@ Resources:
       KeyName: !Ref KeyPairName
       SecurityGroups:
         - !Ref WorkerNodesSecurityGroup
-      # BlockDeviceMappings:
-      #   - DeviceName: /dev/xvda
-      #     Ebs:
-      #       VolumeSize: 20
-      #       VolumeType: gp2
-      #       DeleteOnTermination: true
       UserData:
         Fn::Base64: !Sub |
             #!/bin/bash
