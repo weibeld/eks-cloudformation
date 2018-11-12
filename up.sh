@@ -1,10 +1,12 @@
 #!/bin/bash
 
-# EDIT THESE VARIABLE VALUES:
-STACK_NAME=eks-sent2vec
-KEY_PAIR_NAME=qs-eu-west-1
+# EDIT THIS:
+#------------------------------------------------------------------------------#
+STACK_NAME=my-eks-stack
+KEY_PAIR_NAME=my-key-pair
 NUM_WORKER_NODES=2
-WORKER_NODES_INSTANCE_TYPE=t2.xlarge
+WORKER_NODES_INSTANCE_TYPE=t2.small
+#------------------------------------------------------------------------------#
 
 # Output colours
 COL='\033[1;34m'
