@@ -3,10 +3,6 @@ Description: EKS cluster using a VPC with two public subnets
 
 Parameters:
 
-  KeyPairName:
-    Type: String
-    Description: Name of an existing EC2 key pair (for SSH-access to the worker node instances)
-
   NumWorkerNodes:
     Type: Number
     Description: Number of worker nodes to create
@@ -16,6 +12,10 @@ Parameters:
     Type: String
     Description: EC2 instance type for the worker nodes
     Default: t2.small
+
+  KeyPairName:
+    Type: String
+    Description: Name of an existing EC2 key pair (for SSH-access to the worker node instances)
 
 Mappings:
 
@@ -197,7 +197,7 @@ Resources:
       ToPort: 443
 
   #============================================================================#
-  # Worker node security group
+  # Worker nodes security group
   # Note: default egress rule (allow all traffic to all destinations) applies
   #============================================================================#
 
@@ -261,7 +261,7 @@ Resources:
         - Key: Name
           Value: !Sub "${AWS::StackName}-WorkerNodesAutoScalingGroup"
           PropagateAtLaunch: true
-        # Without this tag, worker nodes are unable to join cluster:
+        # Without this tag, worker nodes are unable to join the cluster:
         - Key: !Sub "kubernetes.io/cluster/${ControlPlane}"
           Value: "owned"
           PropagateAtLaunch: true

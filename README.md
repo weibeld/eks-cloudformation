@@ -28,7 +28,7 @@ This repository contains the following files:
     - `NUM_WORKER_NODES`: number of worker nodes for your EKS cluster
     - `WORKER_NODES_INSTANCE_TYPE`: EC2 instance type for the worker nodes
     - `STACK_NAME`: name of the CloudFormation stack for your EKS cluster
-    - `KEY_PAIR_NAME`: name of an existing EC2 key pair for connectint to the worker nodes with SSH
+    - `KEY_PAIR_NAME`: name of an existing EC2 key pair for connecting to the worker nodes with SSH
 
 2. Run:
     ~~~bash
